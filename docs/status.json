@@ -1,17 +1,17 @@
 {
- "fp": "2cb2ef54b7f5fd92",
+ "fp": "b9b60b4dd95f6cfc",
  "slate_date": "2026-11-11",
  "games": 6,
  "skaters": 216,
- "priced": 32,
+ "priced": 63,
  "model_refreshed": "Nov 11, 5:52 PM ET",
- "model_age_min": 8.2,
+ "model_age_min": 17.9,
  "model_state": "fresh",
- "odds_refreshed": "Nov 11, 5:55 PM ET",
- "odds_age_min": 5.4,
+ "odds_refreshed": "Nov 11, 6:10 PM ET",
+ "odds_age_min": 0.1,
  "odds_state": "fresh",
- "built": "Nov 11, 6:01 PM ET",
- "built_utc": "2026-11-11T23:02+00:00",
+ "built": "Nov 11, 6:10 PM ET",
+ "built_utc": "2026-11-11T23:10+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
   {
@@ -21,7 +21,7 @@
    "model": 0.1612,
    "market": 0.1377,
    "best": 550,
-   "book": "draftkings",
+   "book": "fanduel",
    "ev": 0.0481
   },
   {
@@ -45,24 +45,24 @@
    "ev": -0.0055
   },
   {
-   "name": "Tage Thompson",
+   "name": "J.T. Miller",
    "pos": "F",
-   "matchup": "TBL @ BUF",
-   "model": 0.3846,
-   "market": 0.3538,
-   "best": 155,
-   "book": "betmgm",
-   "ev": -0.0194
+   "matchup": "NYR @ CGY",
+   "model": 0.2686,
+   "market": 0.2548,
+   "best": 270,
+   "book": "fanduel",
+   "ev": -0.0063
   },
   {
-   "name": "Jack Quinn",
+   "name": "Tye Kartye",
    "pos": "F",
-   "matchup": "TBL @ BUF",
-   "model": 0.2928,
-   "market": 0.2816,
-   "best": 230,
-   "book": "betmgm",
-   "ev": -0.0338
+   "matchup": "NYR @ CGY",
+   "model": 0.2247,
+   "market": 0.2104,
+   "best": 340,
+   "book": "fanduel",
+   "ev": -0.0114
   }
  ]
 }
