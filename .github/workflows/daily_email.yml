@@ -1,0 +1,58 @@
+name: Daily board email
+
+# Sent by GitHub, not by the laptop, on purpose.
+#
+# The laptop that builds this board sleeps, and a local mailer would go quiet
+# on exactly the days the board went stale — the days worth being told about.
+# Running here means the email always arrives and can say "nothing published
+# today" when that is the truth.
+#
+# GitHub cron is UTC and does not follow daylight saving, so both offsets are
+# listed and a guard step drops the run that fires at the wrong local hour.
+
+on:
+  schedule:
+    - cron: "45 23 * * *"   # 6:45 PM ET while on EST
+    - cron: "45 22 * * *"   # 6:45 PM ET while on EDT
+  workflow_dispatch:         # manual send, for testing
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip the duplicate daylight-saving run
+        id: guard
+        run: |
+          HOUR=$(TZ=America/New_York date +%H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "go=yes" >> "$GITHUB_OUTPUT"
+          elif [ "$HOUR" = "18" ]; then
+            echo "go=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "Fired at ${HOUR}:00 ET — the other cron entry owns today."
+            echo "go=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compose the email
+        if: steps.guard.outputs.go == 'yes'
+        id: mail
+        run: python .github/compose_email.py
+
+      - name: Send
+        if: steps.guard.outputs.go == 'yes'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: Scorer Board
+          to: ${{ secrets.MAIL_TO }}
+          subject: ${{ steps.mail.outputs.subject }}
+          html_body: file://email.html
