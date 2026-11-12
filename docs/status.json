@@ -1,19 +1,39 @@
 {
- "fp": "3d6b2d70f92e6fe4",
+ "fp": "d77f3b06e025535c",
  "slate_date": "2026-11-12",
  "games": 10,
  "skaters": 360,
- "priced": 194,
+ "priced": 295,
  "model_refreshed": "Nov 12, 6:26 PM ET",
- "model_age_min": 4.3,
+ "model_age_min": 9.4,
  "model_state": "fresh",
- "odds_refreshed": "Nov 12, 6:20 PM ET",
- "odds_age_min": 10.2,
+ "odds_refreshed": "Nov 12, 6:35 PM ET",
+ "odds_age_min": 0.1,
  "odds_state": "fresh",
- "built": "Nov 12, 6:30 PM ET",
- "built_utc": "2026-11-12T23:32+00:00",
+ "built": "Nov 12, 6:35 PM ET",
+ "built_utc": "2026-11-12T23:35+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
+  {
+   "name": "Corey Perry",
+   "pos": "F",
+   "matchup": "NYI @ LAK",
+   "model": 0.2298,
+   "market": 0.1734,
+   "best": 475,
+   "book": "betmgm",
+   "ev": 0.3212
+  },
+  {
+   "name": "Gabriel Vilardi",
+   "pos": "F",
+   "matchup": "WPG @ DAL",
+   "model": 0.331,
+   "market": 0.2342,
+   "best": 290,
+   "book": "draftkings",
+   "ev": 0.2907
+  },
   {
    "name": "Pierre-Luc Dubois",
    "pos": "F",
@@ -21,7 +41,7 @@
    "model": 0.2373,
    "market": 0.168,
    "best": 440,
-   "book": "fanduel",
+   "book": "betrivers",
    "ev": 0.2813
   },
   {
@@ -31,38 +51,18 @@
    "model": 0.2664,
    "market": 0.1917,
    "best": 380,
-   "book": "betrivers",
+   "book": "fanduel",
    "ev": 0.2788
   },
   {
-   "name": "John Tavares",
+   "name": "Dawson Mercer",
    "pos": "F",
-   "matchup": "MIN @ TOR",
-   "model": 0.3399,
-   "market": 0.2617,
-   "best": 240,
-   "book": "fanduel",
-   "ev": 0.1558
-  },
-  {
-   "name": "Jakob Chychrun",
-   "pos": "D",
-   "matchup": "WSH @ NJD",
-   "model": 0.2178,
-   "market": 0.1789,
-   "best": 425,
-   "book": "betmgm",
-   "ev": 0.1437
-  },
-  {
-   "name": "Oliver Kapanen",
-   "pos": "F",
-   "matchup": "MTL @ BOS",
-   "model": 0.1758,
-   "market": 0.1455,
+   "matchup": "WPG @ DAL",
+   "model": 0.1898,
+   "market": 0.1443,
    "best": 550,
-   "book": "draftkings",
-   "ev": 0.1427
+   "book": "fanduel",
+   "ev": 0.234
   }
  ]
 }
