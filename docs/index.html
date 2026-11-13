@@ -263,6 +263,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
       <thead><tr>
         <th class="l" data-k="name">Skater <span class="arr"></span></th>
         <th class="l" data-k="matchup">Game <span class="arr"></span></th>
+        <th data-k="bucket">Bkt <span class="arr"></span></th>
         <th data-k="toi">Proj TOI <span class="arr"></span></th>
         <th data-k="model">Model <span class="arr"></span></th>
         <th data-k="open" class="movecol">Open <span class="arr"></span></th>
@@ -272,6 +273,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
         <th data-k="best">Best price <span class="arr"></span></th>
         <th class="l" data-k="book">Book <span class="arr"></span></th>
         <th data-k="ev">EV <span class="arr"></span></th>
+        <th data-k="segz" class="segcol">Segment <span class="arr"></span></th>
       </tr></thead><tbody id="tb"></tbody>
     </table></div>
     <div class="cards" id="cards"></div>
@@ -456,6 +458,104 @@ Array.prototype.forEach.call(document.querySelectorAll('#tabbar button'),
   b => b.addEventListener('click', () => { showTab(b.dataset.tab); window.scrollTo(0, 0); }));
 window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
 
+
+/* ══ SEGMENT INDEX ══
+   The same grid the History scan reports is also what labels tonight's board,
+   so a segment shown beside a skater is the identical calculation, not a
+   second one that might disagree. Built once, read by both.
+
+   One honest wrinkle: historical rows carry ACTUAL ice time while tonight's
+   carry PROJECTED, so the ice-time bands match a forecast against outcomes.
+   That is the right comparison for a pre-game decision, but it is not an
+   exact like-for-like. */
+const RNG = v => v ? v.split(',').map(Number) : null;
+function segFilters(){
+  return {pos: document.getElementById('sPos').value,
+    price: RNG(document.getElementById('sPrice').value),
+    prob: RNG(document.getElementById('sProb').value),
+    bucket: document.getElementById('sBucket').value,
+    home: document.getElementById('sHome').value,
+    toi: RNG(document.getElementById('sToi').value)};
+}
+function match(r, f){
+  if (f.pos && r.pos !== f.pos) return false;
+  if (f.price) { if (r.best == null || r.best < f.price[0] || r.best >= f.price[1]) return false; }
+  if (f.prob && (r.model < f.prob[0] || r.model >= f.prob[1])) return false;
+  if (f.bucket) {
+    const b = f.bucket.split(',').map(Number);
+    if (b.length === 2) { if (r.bucket < b[0] || r.bucket > b[1]) return false; }
+    else if (r.bucket < b[0]) return false;
+  }
+  if (f.home) { if (String(r.home) !== f.home) return false; }
+  if (f.toi && (r.toi < f.toi[0] || r.toi >= f.toi[1])) return false;
+  return true;
+}
+function stats(rows){
+  const n = rows.length;
+  if (!n) return null;
+  const hits = rows.filter(r => r.scored).length;
+  const actual = hits / n, model = mean(rows, r => r.model);
+  const pr = rows.filter(r => r.best != null);
+  return {n: n, hits: hits, actual: actual, model: model, edge: actual - model,
+    roiN: pr.length, roi: pr.length ? mean(pr, r => r.scored ? dec(r.best) - 1 : -1) : null,
+    market: pr.length ? mean(pr, r => r.market) : null};
+}
+function seTest(st){
+  const p = Math.max(st.model, 0.01);
+  const se = Math.sqrt(p * (1 - p) / st.n);
+  return se > 0 ? st.edge / se : 0;
+}
+
+const SEG_GRID = {
+  POS: ['', 'F', 'D'],
+  PRICE: ['', '-10000,200', '200,400', '400,700', '700,1200', '1200,99999'],
+  PROB: ['', '0,0.08', '0.08,0.15', '0.15,0.25', '0.25,1'],
+  BUCK: ['', '10', '9', '8', '1,3'],
+  TOI: ['', '18,99', '14,18', '0,14']
+};
+const SEG_LBL = {'-10000,200':'+200 or less', '200,400':'+200..+400', '400,700':'+400..+700',
+  '700,1200':'+700..+1200', '1200,99999':'+1200 and out', '0,0.08':'model <8%',
+  '0.08,0.15':'model 8-15%', '0.15,0.25':'model 15-25%', '0.25,1':'model >25%',
+  '10':'bucket 10', '9':'bucket 9+', '8':'bucket 8+', '1,3':'buckets 1-3',
+  '18,99':'18+ min', '14,18':'14-18 min', '0,14':'<14 min', 'F':'Forwards', 'D':'Defense'};
+const SEG_MIN_N = 40;
+
+function buildSegments(){
+  if (!H || !H.rows) return {all: [], tested: 0};
+  const out = [];
+  let tested = 0;
+  SEG_GRID.POS.forEach(p => SEG_GRID.PRICE.forEach(pr => SEG_GRID.PROB.forEach(pb =>
+    SEG_GRID.BUCK.forEach(bk => SEG_GRID.TOI.forEach(to => {
+      tested++;
+      const f = {pos: p, price: RNG(pr), prob: RNG(pb), bucket: bk, home: '', toi: RNG(to)};
+      const rows = H.rows.filter(r => match(r, f));
+      if (rows.length < SEG_MIN_N) return;
+      const st = stats(rows);
+      st.z = seTest(st);
+      st.f = f;
+      st.parts = [p, pr, pb, bk, to].filter(Boolean);
+      st.label = st.parts.map(x => SEG_LBL[x] || x).join(' + ') || 'Everything';
+      out.push(st);
+    })))));
+  out.sort((a, b) => b.z - a.z);
+  return {all: out, tested: tested};
+}
+const SEGMENTS = buildSegments();
+
+/* The segment shown beside a skater is the best-performing one they belong
+   to. That is deliberately the most flattering view available, which is why
+   the column also carries the sample size and goes grey whenever the result
+   sits inside the noise. */
+function bestSegment(row){
+  let best = null;
+  for (const seg of SEGMENTS.all) {
+    if (!seg.parts.length) continue;
+    if (!match(row, seg.f)) continue;
+    if (!best || seg.z > best.z) best = seg;
+  }
+  return best;
+}
+
 /* ══ TAB 1 — today's plays ══ */
 const gamesPriced = (S.games_list || []).filter(g => g.priced > 0).length;
 document.getElementById('subline').textContent =
@@ -537,6 +637,32 @@ const gsel = document.getElementById('game');
 Array.from(new Set(ROWS.map(r => r.matchup).filter(Boolean))).sort().forEach(g => {
   const o = document.createElement('option'); o.value = g; o.textContent = g; gsel.appendChild(o);
 });
+/* Attach each skater's best qualifying segment once, so sorting on it works
+   and the lookup is not repeated on every re-render. */
+ROWS.forEach(r => {
+  const seg = bestSegment(r);
+  r._seg = seg || null;
+  r.segz = seg ? seg.z : -1e9;
+});
+function segCell(r){
+  const seg = r._seg;
+  if (!seg) return '<span class="mu">—</span>';
+  // Grey unless the gap clears the usual bar: most of these are noise, and
+  // colouring them all would present 120 lottery tickets as 120 signals.
+  const solid = Math.abs(seg.z) >= 1.96;
+  const cls = !solid ? 'mu' : (seg.edge > 0 ? 'ev-p' : 'ev-n');
+  return '<span class="' + cls + '" title="' + seg.label + ' — hit ' + pct(seg.actual)
+       + ' vs model ' + pct(seg.model) + ' on ' + seg.n + ' settled picks, '
+       + seg.z.toFixed(1) + ' standard errors">' + sgn(seg.edge)
+       + ' <span class="mu" style="font-weight:400">n=' + seg.n + '</span></span>';
+}
+function segLine(r){
+  const seg = r._seg;
+  if (!seg) return '';
+  const solid = Math.abs(seg.z) >= 1.96;
+  return '<span class="' + (solid ? (seg.edge > 0 ? 'ev-p' : 'ev-n') : 'mu') + '">'
+       + seg.label + ' ' + sgn(seg.edge) + '</span> <span class="mu">n=' + seg.n + '</span>';
+}
 let sortK = 'ev', sortD = -1;
 function render(){
   const q = document.getElementById('q').value.trim().toLowerCase();
@@ -556,6 +682,7 @@ function render(){
     + '<td class="l"><span class="nm">' + r.name + '</span> <span class="pill ' + (r.pos === 'D' ? 'pill-d' : 'pill-f') + '">' + r.pos + '</span>'
       + (pz && r.best >= LONG ? ' <span class="flag" title="Longshot: a tiny probability error becomes a large EV number at these odds">&#9650;</span>' : '') + '</td>'
     + '<td class="l mu">' + (r.matchup || '—') + '</td>'
+    + '<td class="mu">' + r.bucket + '</td>'
     + '<td class="mu">' + (r.toi != null ? r.toi.toFixed(1) : '—') + '</td>'
     + '<td>' + pct(r.model) + '</td>'
     + (pz ? '<td class="movecol mu">' + pct(r.open) + '</td>'
@@ -565,14 +692,17 @@ function render(){
           + '<td class="' + (r.edge > 0 ? 'ev-p' : 'ev-n') + '">' + sgn(r.edge) + '</td>'
           + '<td class="px">' + am(r.best) + '</td><td class="l mu">' + (BOOK[r.book] || r.book || '—') + '</td>'
           + '<td class="' + (r.ev > 0 ? 'ev-p' : 'ev-n') + '">' + sgn(r.ev, 0) + '%</td>'
-        : '<td colspan="7" class="mu" style="text-align:right">no price yet</td>') + '</tr>';
-  }).join('') : '<tr><td colspan="11" class="l mu" style="padding:22px;text-align:center">No skaters match these filters.</td></tr>';
+        : '<td colspan="7" class="mu" style="text-align:right">no price yet</td>')
+    + '<td class="segcol">' + segCell(r) + '</td></tr>';
+  }).join('') : '<tr><td colspan="13" class="l mu" style="padding:22px;text-align:center">No skaters match these filters.</td></tr>';
   document.getElementById('cards').innerHTML = rows.length ? rows.map(r => {
     const pz = r.market != null;
     return '<div class="ccard' + (pz ? '' : ' pending') + '"><div class="ctop"><div><span class="nm">' + r.name + '</span> '
     + '<span class="pill ' + (r.pos === 'D' ? 'pill-d' : 'pill-f') + '">' + r.pos + '</span>'
     + (pz && r.best >= LONG ? ' <span class="flag">&#9650;</span>' : '')
-    + '<div class="csub">' + (r.matchup || '—') + ' · ' + (r.toi != null ? r.toi.toFixed(1) + 'm' : '—') + '</div></div>'
+    + '<div class="csub">' + (r.matchup || '—') + ' · bkt ' + r.bucket + ' · '
+      + (r.toi != null ? r.toi.toFixed(1) + 'm' : '—') + '</div>'
+      + (segLine(r) ? '<div class="csub">' + segLine(r) + '</div>' : '') + '</div>'
     + '<div class="px" style="font-size:1.05rem">' + (pz ? am(r.best) : '<span class="mu" style="font-size:.74rem;font-weight:400">no price yet</span>') + '</div></div>'
     + '<div class="cgrid"' + (pz ? '' : ' style="grid-template-columns:repeat(2,1fr)"') + '>'
     + '<div class="cell"><div class="k">Model</div><div class="v">' + pct(r.model) + '</div></div>'
@@ -673,44 +803,7 @@ if (H) {
      Every metric reports its own sample size, because that is the number that
      decides whether any of this means anything. Returns are computed only on
      rows carrying a real closing price. */
-  const RNG = v => v ? v.split(',').map(Number) : null;
   const SEG_IDS = ['sPos', 'sPrice', 'sProb', 'sBucket', 'sHome', 'sToi'];
-  function segFilters(){
-    return {pos: document.getElementById('sPos').value,
-      price: RNG(document.getElementById('sPrice').value),
-      prob: RNG(document.getElementById('sProb').value),
-      bucket: document.getElementById('sBucket').value,
-      home: document.getElementById('sHome').value,
-      toi: RNG(document.getElementById('sToi').value)};
-  }
-  function match(r, f){
-    if (f.pos && r.pos !== f.pos) return false;
-    if (f.price) { if (r.best == null || r.best < f.price[0] || r.best >= f.price[1]) return false; }
-    if (f.prob && (r.model < f.prob[0] || r.model >= f.prob[1])) return false;
-    if (f.bucket) {
-      const b = f.bucket.split(',').map(Number);
-      if (b.length === 2) { if (r.bucket < b[0] || r.bucket > b[1]) return false; }
-      else if (r.bucket < b[0]) return false;
-    }
-    if (f.home) { if (String(r.home) !== f.home) return false; }
-    if (f.toi && (r.toi < f.toi[0] || r.toi >= f.toi[1])) return false;
-    return true;
-  }
-  function stats(rows){
-    const n = rows.length;
-    if (!n) return null;
-    const hits = rows.filter(r => r.scored).length;
-    const actual = hits / n, model = mean(rows, r => r.model);
-    const pr = rows.filter(r => r.best != null);
-    return {n: n, hits: hits, actual: actual, model: model, edge: actual - model,
-      roiN: pr.length, roi: pr.length ? mean(pr, r => r.scored ? dec(r.best) - 1 : -1) : null,
-      market: pr.length ? mean(pr, r => r.market) : null};
-  }
-  function seTest(st){
-    const p = Math.max(st.model, 0.01);
-    const se = Math.sqrt(p * (1 - p) / st.n);
-    return se > 0 ? st.edge / se : 0;
-  }
   function tile(k, v, d, cls){
     return '<div class="tile"><div class="k">' + k + '</div><div class="v ' + (cls || '') + '">' + v
          + '</div><div class="d">' + d + '</div></div>';
@@ -759,50 +852,26 @@ if (H) {
 
   /* ── automatic scan ── */
   document.getElementById('scanBtn').addEventListener('click', () => {
-    const POS = ['', 'F', 'D'];
-    const PRICE = ['', '-10000,200', '200,400', '400,700', '700,1200', '1200,99999'];
-    const PROB = ['', '0,0.08', '0.08,0.15', '0.15,0.25', '0.25,1'];
-    const BUCK = ['', '10', '9', '8', '1,3'];
-    const TOI = ['', '18,99', '14,18', '0,14'];
-    const LBL = {'-10000,200':'+200 or less', '200,400':'+200..+400', '400,700':'+400..+700',
-      '700,1200':'+700..+1200', '1200,99999':'+1200 and out', '0,0.08':'model <8%',
-      '0.08,0.15':'model 8-15%', '0.15,0.25':'model 15-25%', '0.25,1':'model >25%',
-      '10':'bucket 10', '9':'bucket 9+', '8':'bucket 8+', '1,3':'buckets 1-3',
-      '18,99':'18+ min', '14,18':'14-18 min', '0,14':'<14 min', 'F':'Forwards', 'D':'Defense'};
-    const out = [];
-    let tested = 0;
-    POS.forEach(p => PRICE.forEach(pr => PROB.forEach(pb => BUCK.forEach(bk => TOI.forEach(to => {
-      tested++;
-      const f = {pos: p, price: RNG(pr), prob: RNG(pb), bucket: bk, home: '', toi: RNG(to)};
-      const rows = (H.rows || []).filter(r => match(r, f));
-      if (rows.length < 40) return;
-      const st = stats(rows);
-      st.z = seTest(st);
-      st.label = [p, pr, pb, bk, to].filter(Boolean).map(x => LBL[x] || x).join(' + ') || 'Everything';
-      out.push(st);
-    })))));
-    out.sort((a, b) => b.z - a.z);
-    // Expected false positives come from the segments actually judged, not
-    // from every combination tried — most combinations are discarded for
-    // having too few picks and never get the chance to look significant.
+    const out = SEGMENTS.all, tested = SEGMENTS.tested;
     const expected = Math.max(1, Math.round(out.length * 0.05));
-    const beat = out.filter(s => s.z >= 1.96).length;
+    const beat = out.filter(x => x.z >= 1.96).length;
     document.getElementById('scanout').innerHTML =
       '<div class="note red"><div class="tag">Before you read this</div><div>'
-      + '<b>' + tested.toLocaleString() + ' combinations tested; ' + out.length + ' had at least 40 picks and were judged.</b> '
-      + 'Of those, <b>' + beat + '</b> cleared the usual 1-in-20 bar — and on that many overlapping tests you would '
-      + 'expect about <b>' + expected + '</b> to clear it by chance alone. This list is sorted by how good each one '
-      + 'looks, so the top is exactly where those false positives collect. Nothing here is a system until it holds '
-      + 'on slates that were not used to find it.</div></div>'
+      + '<b>' + tested.toLocaleString() + ' combinations tested; ' + out.length + ' had at least '
+      + SEG_MIN_N + ' picks and were judged.</b> Of those, <b>' + beat + '</b> cleared the usual '
+      + '1-in-20 bar — and on that many overlapping tests you would expect about <b>' + expected
+      + '</b> to clear it by chance alone. This list is sorted by how good each one looks, so the top '
+      + 'is exactly where those false positives collect. Nothing here is a system until it holds on '
+      + 'slates that were not used to find it. These same segments label tonight’s board.</div></div>'
       + '<div class="tblwrap"><table style="min-width:640px"><thead><tr>'
       + '<th class="l">Segment</th><th>Picks</th><th>Hit</th><th>Model</th><th>Edge</th><th>SE</th><th>Return</th>'
       + '</tr></thead><tbody>'
-      + out.slice(0, 15).map(s => '<tr><td class="l nm">' + s.label + '</td><td>' + s.n + '</td><td>' + pct(s.actual) + '</td>'
-        + '<td class="mu">' + pct(s.model) + '</td>'
-        + '<td class="' + (s.edge > 0 ? 'ev-p' : 'ev-n') + '">' + sgn(s.edge) + '</td>'
-        + '<td class="mu">' + s.z.toFixed(1) + '</td>'
-        + '<td class="' + (s.roi == null ? 'mu' : (s.roi > 0 ? 'ev-p' : 'ev-n')) + '">'
-        + (s.roi == null ? '—' : sgn(s.roi, 0) + '% (' + s.roiN + ')') + '</td></tr>').join('')
+      + out.slice(0, 15).map(x => '<tr><td class="l nm">' + x.label + '</td><td>' + x.n + '</td><td>' + pct(x.actual) + '</td>'
+        + '<td class="mu">' + pct(x.model) + '</td>'
+        + '<td class="' + (x.edge > 0 ? 'ev-p' : 'ev-n') + '">' + sgn(x.edge) + '</td>'
+        + '<td class="mu">' + x.z.toFixed(1) + '</td>'
+        + '<td class="' + (x.roi == null ? 'mu' : (x.roi > 0 ? 'ev-p' : 'ev-n')) + '">'
+        + (x.roi == null ? '—' : sgn(x.roi, 0) + '% (' + x.roiN + ')') + '</td></tr>').join('')
       + '</tbody></table></div>';
   });
 
