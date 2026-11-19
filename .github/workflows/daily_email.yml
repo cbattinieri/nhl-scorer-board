@@ -25,17 +25,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Skip the duplicate daylight-saving run
+      - name: Decide whether this run owns today
         id: guard
+        env:
+          SCHED: ${{ github.event.schedule }}
         run: |
-          HOUR=$(TZ=America/New_York date +%H)
+          # WHICH CRON OWNS TODAY, decided by the schedule that triggered this
+          # run rather than by the clock when it happens to execute.
+          #
+          # The previous version required the Eastern hour to be exactly 18.
+          # GitHub routinely delivers scheduled runs late -- these were landing
+          # four and five hours behind -- so the hour never matched and the
+          # email silently skipped every single day while the run still
+          # reported success. Reading github.event.schedule is immune to that
+          # delay: the 23:45 UTC entry is 18:45 Eastern on standard time, the
+          # 22:45 UTC entry is 18:45 Eastern on daylight time, and exactly one
+          # of them is correct on any given date.
+          OFFSET=$(TZ=America/New_York date +%z)
+          NOW=$(TZ=America/New_York date '+%Y-%m-%d %H:%M')
+          echo "triggered by: ${{ github.event_name }} / cron '${SCHED}'"
+          echo "eastern now : ${NOW} (UTC offset ${OFFSET})"
+          GO=no
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "go=yes" >> "$GITHUB_OUTPUT"
-          elif [ "$HOUR" = "18" ]; then
-            echo "go=yes" >> "$GITHUB_OUTPUT"
-          else
-            echo "Fired at ${HOUR}:00 ET — the other cron entry owns today."
-            echo "go=no" >> "$GITHUB_OUTPUT"
+            GO=yes
+          elif [ "$OFFSET" = "-0500" ] && [ "$SCHED" = "45 23 * * *" ]; then
+            GO=yes   # standard time
+          elif [ "$OFFSET" = "-0400" ] && [ "$SCHED" = "45 22 * * *" ]; then
+            GO=yes   # daylight time
+          fi
+          echo "go=$GO" >> "$GITHUB_OUTPUT"
+          if [ "$GO" = "no" ]; then
+            echo "This cron entry does not own today's send; the other one does."
           fi
 
       - name: Compose the email

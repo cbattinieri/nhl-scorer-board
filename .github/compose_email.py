@@ -58,13 +58,42 @@ def main() -> None:
     slate = s.get("slate_date") or "unknown"
     stale = slate != today
 
-    if stale:
+    missed = int(s.get("missed_slates") or 0)
+    missed_games = int(s.get("missed_games") or 0)
+
+    # The subject line is the whole alert. Someone who never opens the board
+    # still has to learn from it that collection has stopped, so a run of
+    # missed slates outranks everything else that could go in it.
+    if missed >= 2:
+        subject = (f"Scorer Board — {missed} SLATES MISSED "
+                   f"({missed_games} games uncaptured)")
+    elif stale:
         subject = f"Scorer Board — STALE, still showing {slate}"
     else:
         subject = (f"Scorer Board — {fmt_date(slate)}, "
                    f"{s.get('games', 0)} games, {s.get('priced', 0)} priced")
 
     parts = []
+    if missed:
+        rows = "".join(
+            f'<tr><td>{html.escape(r["date"])}</td>'
+            f'<td style="text-align:right">{r["games"]}</td>'
+            f'<td style="text-align:right;color:{"#2E7A5A" if r["pred"] else "#A8483D"}">'
+            f'{"captured" if r["pred"] else "no picks"}</td>'
+            f'<td style="text-align:right;color:{"#2E7A5A" if r["odds"] else "#A8483D"}">'
+            f'{"captured" if r["odds"] else "no odds"}</td></tr>'
+            for r in (s.get("recent") or []))
+        parts.append(
+            f'<div class="warn"><b>{missed} of the last '
+            f'{s.get("coverage_window", 14)} days’ slates were never captured '
+            f'— {missed_games} games.</b><br>'
+            f'Pre-game picks cannot be recreated afterwards, so those slates are '
+            f'permanently missing from the record. The build machine was most '
+            f'likely asleep or powered off.</div>'
+            + (f'<table style="margin-bottom:14px"><tr><th>Slate</th>'
+               f'<th style="text-align:right">Games</th>'
+               f'<th style="text-align:right">Picks</th>'
+               f'<th style="text-align:right">Odds</th></tr>{rows}</table>' if rows else ''))
     if stale:
         parts.append(
             f'<div class="warn"><b>The board did not update today.</b> '
