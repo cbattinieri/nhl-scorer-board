@@ -1,27 +1,9 @@
 {
- "fp": "c288d6a51ad2afe1",
- "missed_slates": 9,
+ "fp": "11393780c1a0f80e",
+ "missed_slates": 8,
  "missed_games": 67,
  "coverage_window": 14,
  "recent": [
-  {
-   "date": "2026-11-12",
-   "games": 11,
-   "pred": true,
-   "odds": true
-  },
-  {
-   "date": "2026-11-13",
-   "games": 2,
-   "pred": true,
-   "odds": false
-  },
-  {
-   "date": "2026-11-14",
-   "games": 14,
-   "pred": false,
-   "odds": false
-  },
   {
    "date": "2026-11-15",
    "games": 5,
@@ -45,6 +27,24 @@
    "games": 3,
    "pred": true,
    "odds": true
+  },
+  {
+   "date": "2026-11-19",
+   "games": 12,
+   "pred": false,
+   "odds": false
+  },
+  {
+   "date": "2026-11-21",
+   "games": 14,
+   "pred": false,
+   "odds": false
+  },
+  {
+   "date": "2026-11-22",
+   "games": 5,
+   "pred": false,
+   "odds": false
   }
  ],
  "slate_date": "2026-11-18",
@@ -52,13 +52,13 @@
  "skaters": 36,
  "priced": 32,
  "model_refreshed": "Nov 18, 8:06 PM ET",
- "model_age_min": 83.4,
- "model_state": "fresh",
+ "model_age_min": 5475.3,
+ "model_state": "stale",
  "odds_refreshed": "Nov 18, 9:29 PM ET",
- "odds_age_min": 0.2,
- "odds_state": "fresh",
- "built": "Nov 18, 9:29 PM ET",
- "built_utc": "2026-11-19T02:29+00:00",
+ "odds_age_min": 5392.1,
+ "odds_state": "stale",
+ "built": "Nov 22, 3:21 PM ET",
+ "built_utc": "2026-11-22T20:21+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
   {
