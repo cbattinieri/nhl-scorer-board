@@ -1,5 +1,5 @@
 {
- "fp": "11393780c1a0f80e",
+ "fp": "ef02a00d260b87da",
  "missed_slates": 8,
  "missed_games": 67,
  "coverage_window": 14,
@@ -44,72 +44,21 @@
    "date": "2026-11-22",
    "games": 5,
    "pred": false,
-   "odds": false
+   "odds": true
   }
  ],
- "slate_date": "2026-11-18",
- "games": 1,
- "skaters": 36,
- "priced": 32,
- "model_refreshed": "Nov 18, 8:06 PM ET",
- "model_age_min": 5475.3,
- "model_state": "stale",
- "odds_refreshed": "Nov 18, 9:29 PM ET",
- "odds_age_min": 5392.1,
- "odds_state": "stale",
- "built": "Nov 22, 3:21 PM ET",
- "built_utc": "2026-11-22T20:21+00:00",
+ "slate_date": "2026-11-22",
+ "games": 4,
+ "skaters": 144,
+ "priced": 0,
+ "model_refreshed": "Nov 22, 3:21 PM ET",
+ "model_age_min": 0.6,
+ "model_state": "fresh",
+ "odds_refreshed": "Nov 22, 3:22 PM ET",
+ "odds_age_min": 0.2,
+ "odds_state": "fresh",
+ "built": "Nov 22, 3:22 PM ET",
+ "built_utc": "2026-11-22T20:22+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
- "top": [
-  {
-   "name": "Michael Carcone",
-   "pos": "F",
-   "matchup": "COL @ UTA",
-   "model": 0.1816,
-   "market": 0.1609,
-   "best": 500,
-   "book": "draftkings",
-   "ev": 0.0895
-  },
-  {
-   "name": "Anders Lee",
-   "pos": "F",
-   "matchup": "COL @ UTA",
-   "model": 0.2295,
-   "market": 0.1971,
-   "best": 370,
-   "book": "draftkings",
-   "ev": 0.0787
-  },
-  {
-   "name": "Barrett Hayton",
-   "pos": "F",
-   "matchup": "COL @ UTA",
-   "model": 0.2186,
-   "market": 0.1845,
-   "best": 390,
-   "book": "fanduel",
-   "ev": 0.0713
-  },
-  {
-   "name": "Vincent Trocheck",
-   "pos": "F",
-   "matchup": "COL @ UTA",
-   "model": 0.2878,
-   "market": 0.2506,
-   "best": 265,
-   "book": "betrivers",
-   "ev": 0.0505
-  },
-  {
-   "name": "Clayton Keller",
-   "pos": "F",
-   "matchup": "COL @ UTA",
-   "model": 0.3409,
-   "market": 0.2953,
-   "best": 200,
-   "book": "draftkings",
-   "ev": 0.0228
-  }
- ]
+ "top": []
 }
