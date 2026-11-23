@@ -1,5 +1,5 @@
 {
- "fp": "a33c86b13031a959",
+ "fp": "653d22a2e49ced0f",
  "missed_slates": 7,
  "missed_games": 61,
  "coverage_window": 14,
@@ -50,15 +50,15 @@
  "slate_date": "2026-11-23",
  "games": 7,
  "skaters": 252,
- "priced": 168,
+ "priced": 232,
  "model_refreshed": "Nov 23, 6:20 PM ET",
- "model_age_min": 4.6,
+ "model_age_min": 9.3,
  "model_state": "fresh",
- "odds_refreshed": "Nov 23, 6:15 PM ET",
- "odds_age_min": 10.2,
+ "odds_refreshed": "Nov 23, 6:30 PM ET",
+ "odds_age_min": 0.1,
  "odds_state": "fresh",
- "built": "Nov 23, 6:25 PM ET",
- "built_utc": "2026-11-23T23:25+00:00",
+ "built": "Nov 23, 6:30 PM ET",
+ "built_utc": "2026-11-23T23:30+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
   {
@@ -76,10 +76,30 @@
    "pos": "F",
    "matchup": "LAK @ MTL",
    "model": 0.3253,
-   "market": 0.2377,
+   "market": 0.2378,
    "best": 300,
    "book": "draftkings",
    "ev": 0.3012
+  },
+  {
+   "name": "Tyler Toffoli",
+   "pos": "F",
+   "matchup": "MIN @ SJS",
+   "model": 0.2426,
+   "market": 0.188,
+   "best": 425,
+   "book": "betmgm",
+   "ev": 0.2735
+  },
+  {
+   "name": "Mason Marchment",
+   "pos": "F",
+   "matchup": "MIN @ SJS",
+   "model": 0.2788,
+   "market": 0.1992,
+   "best": 350,
+   "book": "betrivers",
+   "ev": 0.2546
   },
   {
    "name": "Lawson Crouse",
@@ -90,26 +110,6 @@
    "best": 450,
    "book": "draftkings",
    "ev": 0.1666
-  },
-  {
-   "name": "Zach Werenski",
-   "pos": "D",
-   "matchup": "CBJ @ NJD",
-   "model": 0.2327,
-   "market": 0.1844,
-   "best": 400,
-   "book": "betmgm",
-   "ev": 0.1635
-  },
-  {
-   "name": "John Tavares",
-   "pos": "F",
-   "matchup": "TOR @ NYI",
-   "model": 0.3465,
-   "market": 0.2647,
-   "best": 235,
-   "book": "betrivers",
-   "ev": 0.1607
   }
  ]
 }
