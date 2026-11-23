@@ -1,15 +1,9 @@
 {
- "fp": "2b4e07493ec00b84",
- "missed_slates": 8,
- "missed_games": 67,
+ "fp": "352e025930d21ff2",
+ "missed_slates": 7,
+ "missed_games": 61,
  "coverage_window": 14,
  "recent": [
-  {
-   "date": "2026-11-15",
-   "games": 5,
-   "pred": false,
-   "odds": false
-  },
   {
    "date": "2026-11-16",
    "games": 2,
@@ -45,6 +39,12 @@
    "games": 5,
    "pred": true,
    "odds": true
+  },
+  {
+   "date": "2026-11-23",
+   "games": 7,
+   "pred": false,
+   "odds": true
   }
  ],
  "slate_date": "2026-11-22",
@@ -52,13 +52,13 @@
  "skaters": 144,
  "priced": 127,
  "model_refreshed": "Nov 22, 3:21 PM ET",
- "model_age_min": 70.7,
- "model_state": "fresh",
- "odds_refreshed": "Nov 22, 4:32 PM ET",
- "odds_age_min": 0.3,
+ "model_age_min": 1613.8,
+ "model_state": "stale",
+ "odds_refreshed": "Nov 23, 6:15 PM ET",
+ "odds_age_min": 0.1,
  "odds_state": "fresh",
- "built": "Nov 22, 4:32 PM ET",
- "built_utc": "2026-11-22T21:32+00:00",
+ "built": "Nov 23, 6:15 PM ET",
+ "built_utc": "2026-11-23T23:15+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
   {
@@ -68,7 +68,7 @@
    "model": 0.3249,
    "market": 0.2535,
    "best": 270,
-   "book": "betmgm",
+   "book": null,
    "ev": 0.202
   },
   {
@@ -78,7 +78,7 @@
    "model": 0.3031,
    "market": 0.246,
    "best": 275,
-   "book": "draftkings",
+   "book": null,
    "ev": 0.1368
   },
   {
@@ -88,7 +88,7 @@
    "model": 0.1884,
    "market": 0.1456,
    "best": 500,
-   "book": "fanduel",
+   "book": null,
    "ev": 0.1301
   },
   {
@@ -98,7 +98,7 @@
    "model": 0.2443,
    "market": 0.1999,
    "best": 360,
-   "book": "betmgm",
+   "book": null,
    "ev": 0.1239
   },
   {
@@ -108,7 +108,7 @@
    "model": 0.397,
    "market": 0.3198,
    "best": 180,
-   "book": "betmgm",
+   "book": null,
    "ev": 0.1116
   }
  ]
