@@ -1,5 +1,5 @@
 {
- "fp": "356b96febc13a444",
+ "fp": "962529237510a3f4",
  "missed_slates": 7,
  "missed_games": 61,
  "coverage_window": 14,
@@ -52,13 +52,13 @@
  "skaters": 252,
  "priced": 232,
  "model_refreshed": "Nov 23, 6:20 PM ET",
- "model_age_min": 84.3,
+ "model_age_min": 109.8,
  "model_state": "fresh",
  "odds_refreshed": "Nov 23, 6:30 PM ET",
- "odds_age_min": 75.1,
+ "odds_age_min": 100.6,
  "odds_state": "fresh",
- "built": "Nov 23, 7:45 PM ET",
- "built_utc": "2026-11-24T00:45+00:00",
+ "built": "Nov 23, 8:10 PM ET",
+ "built_utc": "2026-11-24T01:11+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
   {
@@ -69,7 +69,7 @@
    "market": 0.162,
    "best": 550,
    "book": "draftkings",
-   "ev": 0.5998
+   "ev": 0.2536
   },
   {
    "name": "Alex Laferriere",
@@ -79,7 +79,7 @@
    "market": 0.2378,
    "best": 300,
    "book": "draftkings",
-   "ev": 0.3012
+   "ev": 0.1216
   },
   {
    "name": "Tyler Toffoli",
@@ -89,27 +89,27 @@
    "market": 0.188,
    "best": 425,
    "book": "betmgm",
-   "ev": 0.2735
+   "ev": 0.1161
   },
   {
-   "name": "Mason Marchment",
+   "name": "Adrian Kempe",
    "pos": "F",
-   "matchup": "MIN @ SJS",
-   "model": 0.2788,
-   "market": 0.1992,
-   "best": 350,
-   "book": "betrivers",
-   "ev": 0.2546
+   "matchup": "LAK @ MTL",
+   "model": 0.3603,
+   "market": 0.2977,
+   "best": 220,
+   "book": "betmgm",
+   "ev": 0.0875
   },
   {
-   "name": "Lawson Crouse",
+   "name": "Matvei Gridin",
    "pos": "F",
-   "matchup": "UTA @ WPG",
-   "model": 0.2121,
-   "market": 0.1606,
-   "best": 450,
-   "book": "draftkings",
-   "ev": 0.1666
+   "matchup": "CGY @ OTT",
+   "model": 0.2091,
+   "market": 0.2112,
+   "best": 390,
+   "book": "betmgm",
+   "ev": 0.0693
   }
  ]
 }
