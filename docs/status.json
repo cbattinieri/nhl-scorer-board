@@ -1,5 +1,5 @@
 {
- "fp": "962529237510a3f4",
+ "fp": "03443d4861884c2d",
  "missed_slates": 7,
  "missed_games": 61,
  "coverage_window": 14,
@@ -52,13 +52,13 @@
  "skaters": 252,
  "priced": 232,
  "model_refreshed": "Nov 23, 6:20 PM ET",
- "model_age_min": 109.8,
+ "model_age_min": 114.3,
  "model_state": "fresh",
  "odds_refreshed": "Nov 23, 6:30 PM ET",
- "odds_age_min": 100.6,
+ "odds_age_min": 105.1,
  "odds_state": "fresh",
- "built": "Nov 23, 8:10 PM ET",
- "built_utc": "2026-11-24T01:11+00:00",
+ "built": "Nov 23, 8:15 PM ET",
+ "built_utc": "2026-11-24T01:15+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
  "top": [
   {
