@@ -1,5 +1,5 @@
 {
- "fp": "03443d4861884c2d",
+ "fp": "01783ecc30e74ab6",
  "missed_slates": 7,
  "missed_games": 61,
  "coverage_window": 14,
@@ -58,8 +58,9 @@
  "odds_age_min": 105.1,
  "odds_state": "fresh",
  "built": "Nov 23, 8:15 PM ET",
- "built_utc": "2026-11-24T01:15+00:00",
+ "built_utc": "2026-11-24T01:16+00:00",
  "url": "https://cbattinieri.github.io/nhl-scorer-board/",
+ "top_book": "draftkings",
  "top": [
   {
    "name": "Valeri Nichushkin",
@@ -67,9 +68,10 @@
    "matchup": "CBJ @ NJD",
    "model": 0.2461,
    "market": 0.162,
+   "blend": 0.1929,
    "best": 550,
    "book": "draftkings",
-   "ev": 0.2536
+   "ev": 0.2538
   },
   {
    "name": "Alex Laferriere",
@@ -77,19 +79,10 @@
    "matchup": "LAK @ MTL",
    "model": 0.3253,
    "market": 0.2378,
+   "blend": 0.2804,
    "best": 300,
    "book": "draftkings",
    "ev": 0.1216
-  },
-  {
-   "name": "Tyler Toffoli",
-   "pos": "F",
-   "matchup": "MIN @ SJS",
-   "model": 0.2426,
-   "market": 0.188,
-   "best": 425,
-   "book": "betmgm",
-   "ev": 0.1161
   },
   {
    "name": "Adrian Kempe",
@@ -97,19 +90,32 @@
    "matchup": "LAK @ MTL",
    "model": 0.3603,
    "market": 0.2977,
-   "best": 220,
-   "book": "betmgm",
-   "ev": 0.0875
+   "blend": 0.3399,
+   "best": 210,
+   "book": "draftkings",
+   "ev": 0.0537
   },
   {
-   "name": "Matvei Gridin",
+   "name": "Mikael Backlund",
    "pos": "F",
    "matchup": "CGY @ OTT",
-   "model": 0.2091,
-   "market": 0.2112,
-   "best": 390,
-   "book": "betmgm",
-   "ev": 0.0693
+   "model": 0.1941,
+   "market": 0.1711,
+   "blend": 0.1827,
+   "best": 475,
+   "book": "draftkings",
+   "ev": 0.0505
+  },
+  {
+   "name": "Matt Coronato",
+   "pos": "F",
+   "matchup": "CGY @ OTT",
+   "model": 0.2453,
+   "market": 0.2197,
+   "blend": 0.2381,
+   "best": 330,
+   "book": "draftkings",
+   "ev": 0.0238
   }
  ]
 }

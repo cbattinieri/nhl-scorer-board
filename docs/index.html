@@ -721,6 +721,11 @@ Array.from(new Set([].concat.apply([], ROWS.map(r => r.prices ? Object.keys(r.pr
     o.value = b; o.textContent = 'At ' + (BOOK[b] || b);
     bsel.appendChild(o);
   });
+/* DraftKings is the book actually bet, so it is the default view. The best
+   price across books mostly surfaces whichever book is furthest off the
+   consensus, and the backtest found betting those gaps loses. */
+const DEFAULT_BOOK = 'draftkings';
+if (Array.from(bsel.options).some(o => o.value === DEFAULT_BOOK)) bsel.value = DEFAULT_BOOK;
 function atBook(r, b){
   if (!b || !r.prices) return r;
   const price = r.prices[b];
