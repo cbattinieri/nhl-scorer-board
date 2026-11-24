@@ -21,6 +21,8 @@ import zoneinfo
 ET = zoneinfo.ZoneInfo("America/New_York")
 URL = "https://cbattinieri.github.io/nhl-scorer-board/"
 STATUS = pathlib.Path("docs/status.json")
+BOOK_NAMES = {"draftkings": "DraftKings", "fanduel": "FanDuel", "betmgm": "BetMGM",
+              "betrivers": "BetRivers", "bovada": "Bovada"}
 
 CSS = """
 body{margin:0;background:#F5F7F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#0C1821}
@@ -111,10 +113,12 @@ def main() -> None:
 
     top = s.get("top") or []
     if top and not stale:
+        book = BOOK_NAMES.get(s.get("top_book") or "", "the best book")
         parts.append(
-            '<div class="note"><b>Longshots are already excluded.</b> At +600 and out, '
-            'expected value is dominated by model error on a tiny probability rather than '
-            'by real disagreement with the book. The model also runs hot overall.</div>')
+            f'<div class="note"><b>Priced at {html.escape(book)}, from a blend of market and '
+            'model.</b> Longshots (+600 and out) are excluded. In last season&rsquo;s '
+            'backtest these plays still returned slightly below even, so none of this is a '
+            'proven edge.</div>')
         rows = "".join(
             f'<tr><td>{html.escape(t["name"])} <span style="color:#5B6B79;font-weight:400">'
             f'{html.escape(t.get("pos") or "")}</span><br>'
@@ -123,17 +127,19 @@ def main() -> None:
             f'<td>{t["model"] * 100:.1f}%</td>'
             f'<td>{t["market"] * 100:.1f}%</td>'
             f'<td>{"+" if t["best"] > 0 else ""}{t["best"]}</td>'
-            f'<td style="color:#2E7A5A;font-weight:600">+{t["ev"] * 100:.0f}%</td></tr>'
+            f'<td style="color:{"#2E7A5A" if t["ev"] > 0 else "#B5403A"};font-weight:600">'
+            f'{t["ev"] * 100:+.0f}%</td></tr>'
             for t in top)
+        price_head = "DK" if s.get("top_book") == "draftkings" else "Best"
         parts.append(
             '<table><tr><th>Skater</th><th>Model</th><th>Market</th>'
-            f'<th>Best</th><th>EV</th></tr>{rows}</table>')
+            f'<th>{price_head}</th><th>EV</th></tr>{rows}</table>')
 
     parts.append(f'<a class="btn" href="{URL}">Open the full board</a>')
     parts.append(
         '<div class="ft">Research output, not betting advice. '
-        'Expected value is computed at the single best price across books, which '
-        'naturally picks whichever book is furthest off.<br>'
+        'Expected value is priced from a market-and-model blend at DraftKings&rsquo; '
+        'posted price.<br>'
         f'Sent {now.strftime("%b %d, %I:%M %p").replace(" 0", " ")} ET by the '
         'daily_email workflow.</div>')
 
